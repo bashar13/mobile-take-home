@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Rick &amp; Morty Episodes</string>
-    <string name="empty_string">""</string>
+    <string name="title_activity_character_list">Characters</string>
+    <string name="tab_text_1">Alive</string>
+    <string name="tab_text_2">Dead</string>
+    <string name="tab_text_3">Unknown</string>
 </resources>

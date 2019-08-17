@@ -15,7 +15,7 @@ class EpisodeDataModel {
     private String episodeName;
     private String episodeAirDate;
     private String episodeNumber;
-    private ArrayList<String> characterList = new ArrayList<>();
+    private String characterIds;
 
     EpisodeDataModel(JSONObject episodeObject) {
 
@@ -25,9 +25,12 @@ class EpisodeDataModel {
             episodeNumber = episodeObject.getString("episode");
 
             JSONArray characters = episodeObject.getJSONArray("characters");
+            ArrayList<String> characterList = new ArrayList<>();
             for( int i = 0; i< characters.length(); i++) {
                 characterList.add(characters.getString(i));
             }
+
+            characterIds = getCharacterIds(characterList);
 
         } catch (final JSONException e) {
             Log.e(TAG, "JSON parsing error" + e.getMessage());
@@ -47,8 +50,19 @@ class EpisodeDataModel {
         return episodeNumber;
     }
 
-    ArrayList<String> getCharacterList() {
-        return characterList;
+    String getCharacterIds() {
+        return characterIds;
+    }
+
+    private String getCharacterIds(ArrayList<String> list) {
+        StringBuilder ids = new StringBuilder();
+        for(String item: list) {
+            String id = item.substring(42) + ",";
+            ids.append(id);
+        }
+        String result = ids.substring(0, ids.length()-1);
+
+        return result;
     }
 
 

@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class EpisodesFetcher extends AsyncTask<String, Void, ArrayList<EpisodeDataModel>> {
+class CharacterFetcher extends AsyncTask<String, Void, ArrayList<CharacterDataModel>> {
 
-    private String TAG = EpisodesFetcher.class.getSimpleName();
-    ArrayList<EpisodeDataModel> episodeList = new ArrayList<>();
-    public AsyncResponseForEpisodeList delegate = null;
+    private String TAG = CharacterFetcher.class.getSimpleName();
+    ArrayList<CharacterDataModel> characterList = new ArrayList<>();
+    public AsyncResponseForCharacterList delegate = null;
 
     @Override
     protected void onPreExecute() {
@@ -23,36 +23,28 @@ class EpisodesFetcher extends AsyncTask<String, Void, ArrayList<EpisodeDataModel
     }
 
     @Override
-    protected ArrayList<EpisodeDataModel> doInBackground(String... params) {
+    protected ArrayList<CharacterDataModel> doInBackground(String... params) {
 
         HTTPHandler sh = new HTTPHandler();
         // Making a request to url and getting response
         String url = params[0];
-        do {
-            String jsonStr = sh.makeServiceCall(url);
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObject = new JSONObject(jsonStr);
-                    JSONArray episodes = jsonObject.getJSONArray("results");
-                    for (int i=0; i< episodes.length(); i++) {
-                        JSONObject episode = episodes.getJSONObject(i);
-                        EpisodeDataModel episodeDataModel = new EpisodeDataModel(episode);
-                        episodeList.add(episodeDataModel);
-                    }
-                    JSONObject info = jsonObject.getJSONObject("info");
-                    String nextUrl = info.getString("next");
-                    url = nextUrl;
-                } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
-                }
+
+        String jsonStr = sh.makeServiceCall(url);
+        try {
+            JSONArray characters = new JSONArray(jsonStr);
+
+            for (int i=0; i< characters.length(); i++) {
+                JSONObject character = characters.getJSONObject(i);
+                CharacterDataModel characterDataModel = new CharacterDataModel(character);
+                characterList.add(characterDataModel);
             }
-
-        } while(!url.isEmpty());
-
-        for (EpisodeDataModel data: episodeList) {
-            System.out.println(data.getCharacterIds());
+        } catch (final JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
         }
 
+        for (CharacterDataModel item: characterList) {
+            System.out.println(item.getCharName());
+        }
 
         //Log.e(TAG, "Response from url: " + jsonStr);
 //        if (jsonStr != null) {
@@ -114,16 +106,14 @@ class EpisodesFetcher extends AsyncTask<String, Void, ArrayList<EpisodeDataModel
 //            });
 //        }
 
-        return episodeList;
+        return characterList;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<EpisodeDataModel> result) {
+    protected void onPostExecute(ArrayList<CharacterDataModel> result) {
         super.onPostExecute(result);
 
         delegate.updateUIOnProcessFinish(result);
-
-
 
     }
 }

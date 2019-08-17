@@ -1,5 +1,6 @@
 package com.bashar.rickmortyepisodes;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EpisodeListAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull EpisodeListAdapter.ViewHolder viewHolder, final int position) {
 
         final EpisodeDataModel data = episodeList.get(position);
         viewHolder.episodeName.setText(data.getEpisodeName());
@@ -38,7 +39,14 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
         viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+ data.getEpisodeName(),Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
+                System.out.println(data.getEpisodeName());
+//                for(int i=0; i<data.getCharacterList().size(); i++) {
+//                    System.out.println(data.getCharacterList().get(i));
+//                }
+                Intent intent = new Intent(view.getContext(), CharacterListActivity.class);
+                intent.putExtra("CHARACTER_IDS", data.getCharacterIds());
+                view.getContext().startActivity(intent);
             }
         });
     }

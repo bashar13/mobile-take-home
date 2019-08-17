@@ -1,6 +1,7 @@
 package com.bashar.rickmortyepisodes;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.ViewHolder> {
@@ -43,9 +45,11 @@ class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.Vie
 //                for(int i=0; i<data.getCharacterList().size(); i++) {
 //                    System.out.println(data.getCharacterList().get(i));
 //                }
-//                Intent intent = new Intent(view.getContext(), CharacterListActivity.class);
-//                intent.putExtra("CHARACTER_IDS", data.getCharacterIds());
-//                view.getContext().startActivity(intent);
+                Intent intent = new Intent(view.getContext(), CharacterInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("CHAR_INFO", (Serializable)data);
+                intent.putExtra("CHAR_DATA", bundle);
+                view.getContext().startActivity(intent);
             }
         });
     }
@@ -53,6 +57,12 @@ class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.Vie
     @Override
     public int getItemCount() {
         return characterList.size();
+    }
+
+    public void removeItem(int position) {
+        characterList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, characterList.size());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

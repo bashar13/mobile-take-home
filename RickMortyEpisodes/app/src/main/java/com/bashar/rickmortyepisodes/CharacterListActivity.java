@@ -6,25 +6,20 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.bashar.rickmortyepisodes.ui.main.SectionsPagerAdapter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class CharacterListActivity extends AppCompatActivity implements AsyncResponseForCharacterList, AliveCharacterFragment.SendDeletedCharacter {
 
     private String TAG = CharacterListActivity.class.getSimpleName();
-    CharacterFetcher asyncTask = new CharacterFetcher();
+    private ParseCharacterListTask asyncTask = new ParseCharacterListTask();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_list);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        TabbedViewPagerAdapter tabbedViewPagerAdapter = new TabbedViewPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setAdapter(tabbedViewPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
@@ -38,15 +33,7 @@ public class CharacterListActivity extends AppCompatActivity implements AsyncRes
 
     }
 
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        dataPasser = (OnDataPass) context;
-//    }
-
-
-    void getCharacters(String ids) {
+    private void getCharacters(String ids) {
 
         String urlStr = "https://rickandmortyapi.com/api/character/" + ids;
         System.out.println(TAG + urlStr);

@@ -16,7 +16,7 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
 
     private ArrayList<EpisodeDataModel> episodeList;
 
-    public EpisodeListAdapter(ArrayList<EpisodeDataModel> data) {
+    EpisodeListAdapter(ArrayList<EpisodeDataModel> data) {
         episodeList = data;
     }
 
@@ -40,10 +40,7 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
-                System.out.println(data.getEpisodeName());
-//                for(int i=0; i<data.getCharacterList().size(); i++) {
-//                    System.out.println(data.getCharacterList().get(i));
-//                }
+                //System.out.println(data.getEpisodeName());
                 Intent intent = new Intent(view.getContext(), CharacterListActivity.class);
                 intent.putExtra("CHARACTER_IDS", data.getCharacterIds());
                 view.getContext().startActivity(intent);
@@ -56,12 +53,12 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
         return episodeList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView episodeName;
-        public TextView episodeAirDate;
-        public TextView episodeNo;
-        public RelativeLayout relativeLayout;
-        public ViewHolder(View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView episodeName;
+        TextView episodeAirDate;
+        TextView episodeNo;
+        RelativeLayout relativeLayout;
+        ViewHolder(View itemView) {
             super(itemView);
             this.episodeName = itemView.findViewById(R.id.episodeName);
             this.episodeAirDate = itemView.findViewById(R.id.episodeAirDate);

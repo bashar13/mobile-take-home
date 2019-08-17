@@ -8,11 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -31,7 +27,7 @@ import java.util.Collections;
 public class AliveCharacterFragment extends Fragment {
 
     RecyclerView characterListView;
-    AdapterCharacterList adapterCharacterList;
+    CharacterListAdapter characterListAdapter;
     private Paint p = new Paint();
     SendDeletedCharacter sendDeletedCharacter;
     ArrayList<CharacterDataModel> characterList = new ArrayList<>();
@@ -42,12 +38,10 @@ public class AliveCharacterFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_alive_character, container, false);
 
         characterListView = view.findViewById(R.id.aliveCharList);
@@ -64,11 +58,11 @@ public class AliveCharacterFragment extends Fragment {
     private void updateView(ArrayList<CharacterDataModel> list) {
 
         characterList = list;
-        System.out.println("alive fragment = " + characterList.size());
-        adapterCharacterList = new AdapterCharacterList(characterList);
+        //System.out.println("alive fragment = " + characterList.size());
+        characterListAdapter = new CharacterListAdapter(characterList);
         characterListView.setHasFixedSize(true);
         characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        characterListView.setAdapter(adapterCharacterList);
+        characterListView.setAdapter(characterListAdapter);
     }
 
     private void enableSwipe(){
@@ -85,7 +79,7 @@ public class AliveCharacterFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
 
                 deletedCharacters.add(characterList.get(position));
-                adapterCharacterList.removeItem(position);
+                characterListAdapter.removeItem(position);
                 deletedCharacters.get(deletedCharacters.size()-1).setCharStatus("Dead");
 
             }
@@ -151,17 +145,12 @@ public class AliveCharacterFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            Log.d("Alive Fragment", "Fragment is visible.");
             deletedCharacters.clear();
         }
-
         else {
-            Log.d("Alive Fragment", "Fragment is not visible.");
             if(deletedCharacters.size() != 0) {
                 sendDeletedCharacter.sendData(deletedCharacters);
-
             }
-
         }
     }
 

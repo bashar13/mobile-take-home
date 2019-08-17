@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class DeadCharacterFragment extends Fragment {
 
 
@@ -50,11 +47,11 @@ public class DeadCharacterFragment extends Fragment {
 
     private void updateView(ArrayList<CharacterDataModel> characterList) {
 
-        System.out.println("dead fragment = " + characterList.size());
-        AdapterCharacterList adapterCharacterList = new AdapterCharacterList(characterList);
+        //System.out.println("dead fragment = " + characterList.size());
+        CharacterListAdapter characterListAdapter = new CharacterListAdapter(characterList);
         characterListView.setHasFixedSize(true);
         characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        characterListView.setAdapter(adapterCharacterList);
+        characterListView.setAdapter(characterListAdapter);
     }
 
     private final BroadcastReceiver mHandleMessageReceiver = new
@@ -83,39 +80,6 @@ public class DeadCharacterFragment extends Fragment {
             Log.e("UnRegister Error", "> " + e.getMessage());
         }
         super.onDestroy();
-    }
-
-//    @Override
-//    public void isVisible() {
-//        super.onResume();
-//
-//        System.out.println("Dead fragment on REsume");
-//    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            Log.d("Dead Fragment", "Fragment is visible.");
-//            Bundle bundle = this.getArguments();
-//            if (bundle != null) {
-//                ArrayList<CharacterDataModel> list = (ArrayList<CharacterDataModel>)bundle.getSerializable("DELETED_CHAR");
-//                characterList.addAll(list);
-//                Collections.sort(characterList);
-//                updateView(characterList);
-//            }
-            AliveCharacterFragment fragment = new AliveCharacterFragment();
-            if(fragment.deletedCharacters.size() != 0) {
-                characterList.addAll(fragment.deletedCharacters);
-                Collections.sort(characterList);
-                updateView(characterList);
-
-            }
-        }
-
-        else
-            Log.d("Dead Fragment", "Fragment is not visible.");
     }
 
     protected void addDeadCharacters(ArrayList<CharacterDataModel> list) {

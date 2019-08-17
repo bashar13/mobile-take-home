@@ -16,10 +16,10 @@ class HTTPHandler {
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
-    public HTTPHandler() {
+    HTTPHandler() {
     }
 
-    public String makeServiceCall(String reqUrl) {
+    String makeServiceCall(String reqUrl) {
         String response = null;
         try {
             URL url = new URL(reqUrl);

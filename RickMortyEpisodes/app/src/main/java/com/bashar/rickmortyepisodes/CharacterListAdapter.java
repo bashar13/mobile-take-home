@@ -8,24 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.ViewHolder> {
+class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdapter.ViewHolder> {
 
     private ArrayList<CharacterDataModel> characterList;
 
-    public AdapterCharacterList(ArrayList<CharacterDataModel> data) {
+    CharacterListAdapter(ArrayList<CharacterDataModel> data) {
         characterList = data;
     }
 
     @NonNull
     @Override
-    public AdapterCharacterList.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public CharacterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View listItem = layoutInflater.inflate(R.layout.list_item_character, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
@@ -33,18 +32,15 @@ class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.Vie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterCharacterList.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull CharacterListAdapter.ViewHolder viewHolder, final int position) {
 
         final CharacterDataModel data = characterList.get(position);
         viewHolder.charName.setText(data.getCharName());
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
-                System.out.println(data.getCharName());
-//                for(int i=0; i<data.getCharacterList().size(); i++) {
-//                    System.out.println(data.getCharacterList().get(i));
-//                }
+                //Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
+                //System.out.println(data.getCharName());
                 Intent intent = new Intent(view.getContext(), CharacterInfoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("CHAR_INFO", (Serializable)data);
@@ -59,16 +55,16 @@ class AdapterCharacterList extends RecyclerView.Adapter<AdapterCharacterList.Vie
         return characterList.size();
     }
 
-    public void removeItem(int position) {
+    void removeItem(int position) {
         characterList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, characterList.size());
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView charName;
-        public LinearLayout linearLayout;
-        public ViewHolder(View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView charName;
+        LinearLayout linearLayout;
+        ViewHolder(View itemView) {
             super(itemView);
             this.charName = itemView.findViewById(R.id.charName);
 

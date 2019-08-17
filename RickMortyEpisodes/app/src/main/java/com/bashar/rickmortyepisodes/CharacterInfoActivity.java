@@ -35,6 +35,7 @@ public class CharacterInfoActivity extends AppCompatActivity {
 
         new DownloadImageTask(charAvatar).execute(characterDataModel.getCharImage());
 
+        charAvatar.setImageResource(R.drawable.noavatar);
         charStatus.setText(characterDataModel.getCharStatus());
         charId.setText(String.valueOf(characterDataModel.getCharId()));
         charName.setText(characterDataModel.getCharName());

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class CharacterListActivity extends AppCompatActivity implements AsyncResponseForCharacterList, AliveCharacterFragment.SendDeletedCharacter {
 
     private String TAG = CharacterListActivity.class.getSimpleName();
+    public static String STR_ALIVE = "Alive";
+    public static String STR_DEAD = "Dead";
     private FetchCharacterListTask asyncTask = new FetchCharacterListTask();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +56,9 @@ public class CharacterListActivity extends AppCompatActivity implements AsyncRes
         ArrayList<CharacterDataModel> deadCharacters = new ArrayList<>();
         if(!result.isEmpty()) {
             for (CharacterDataModel item : result) {
-                if (item.getCharStatus().equalsIgnoreCase("Alive")) {
+                if (item.getCharStatus().equalsIgnoreCase(STR_ALIVE)) {
                     aliveCharacters.add(item);
-                } else if (item.getCharStatus().equalsIgnoreCase("Dead")) {
+                } else if (item.getCharStatus().equalsIgnoreCase(STR_DEAD)) {
                     deadCharacters.add(item);
                 }
             }

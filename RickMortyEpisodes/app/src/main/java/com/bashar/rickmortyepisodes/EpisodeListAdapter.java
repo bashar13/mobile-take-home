@@ -39,7 +39,7 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
         viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
+                //Toast.makeText(view.getContext(),"click on item: "+ position,Toast.LENGTH_LONG).show();
                 //System.out.println(data.getEpisodeName());
                 Intent intent = new Intent(view.getContext(), CharacterListActivity.class);
                 intent.putExtra("CHARACTER_IDS", data.getCharacterIds());

@@ -86,6 +86,10 @@ class CharacterDataModel implements Serializable, Comparable<CharacterDataModel>
         return charCreated;
     }
 
+    void setCharStatus(String status) {
+        charStatus = status;
+    }
+
     private Date convertStringToDate(String dateStr) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         Date date = null;

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CharacterListActivity extends AppCompatActivity implements AsyncResponseForCharacterList {
+public class CharacterListActivity extends AppCompatActivity implements AsyncResponseForCharacterList, AliveCharacterFragment.SendDeletedCharacter {
 
     private String TAG = CharacterListActivity.class.getSimpleName();
     CharacterFetcher asyncTask = new CharacterFetcher();
@@ -74,5 +74,12 @@ public class CharacterListActivity extends AppCompatActivity implements AsyncRes
         bundle.putSerializable("DEAD_CHAR", (Serializable)deadCharacters);
         intent.putExtra("CHAR_DATA", bundle);
         sendBroadcast(intent);
+    }
+
+    @Override
+    public void sendData(ArrayList<CharacterDataModel> list) {
+        String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
+        DeadCharacterFragment fragment = (DeadCharacterFragment)getSupportFragmentManager().findFragmentByTag(tag);
+        fragment.addDeadCharacters(list);
     }
 }

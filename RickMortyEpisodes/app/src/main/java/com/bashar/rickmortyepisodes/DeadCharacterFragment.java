@@ -25,6 +25,7 @@ public class DeadCharacterFragment extends Fragment {
 
 
     RecyclerView characterListView;
+    ArrayList<CharacterDataModel> characterList = new ArrayList<>();
     public DeadCharacterFragment() {
         // Required empty public constructor
     }
@@ -42,6 +43,8 @@ public class DeadCharacterFragment extends Fragment {
         getActivity().getApplicationContext().
                 registerReceiver(mHandleMessageReceiver, filter);
 
+        System.out.println("Dead Fragment on Create");
+        view.setId(R.id.aliveCharList);
         return view;
     }
 
@@ -59,7 +62,7 @@ public class DeadCharacterFragment extends Fragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     Bundle bundle = intent.getBundleExtra("CHAR_DATA");
-                    ArrayList<CharacterDataModel> characterList = (ArrayList<CharacterDataModel>)bundle.getSerializable("DEAD_CHAR");
+                    characterList = (ArrayList<CharacterDataModel>)bundle.getSerializable("DEAD_CHAR");
 
                     Collections.sort(characterList);
                     System.out.println("Fragment dead = " + characterList.size());
@@ -81,5 +84,45 @@ public class DeadCharacterFragment extends Fragment {
         }
         super.onDestroy();
     }
+
+//    @Override
+//    public void isVisible() {
+//        super.onResume();
+//
+//        System.out.println("Dead fragment on REsume");
+//    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Log.d("Dead Fragment", "Fragment is visible.");
+//            Bundle bundle = this.getArguments();
+//            if (bundle != null) {
+//                ArrayList<CharacterDataModel> list = (ArrayList<CharacterDataModel>)bundle.getSerializable("DELETED_CHAR");
+//                characterList.addAll(list);
+//                Collections.sort(characterList);
+//                updateView(characterList);
+//            }
+            AliveCharacterFragment fragment = new AliveCharacterFragment();
+            if(fragment.deletedCharacters.size() != 0) {
+                characterList.addAll(fragment.deletedCharacters);
+                Collections.sort(characterList);
+                updateView(characterList);
+
+            }
+        }
+
+        else
+            Log.d("Dead Fragment", "Fragment is not visible.");
+    }
+
+    protected void addDeadCharacters(ArrayList<CharacterDataModel> list) {
+        characterList.addAll(list);
+        Collections.sort(characterList);
+        updateView(characterList);
+    }
+
 
 }

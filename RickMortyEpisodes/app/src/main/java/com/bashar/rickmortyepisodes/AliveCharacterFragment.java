@@ -4,7 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorSpace;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +32,10 @@ public class AliveCharacterFragment extends Fragment {
 
     RecyclerView characterListView;
     AdapterCharacterList adapterCharacterList;
+    private Paint p = new Paint();
+    SendDeletedCharacter sendDeletedCharacter;
+    ArrayList<CharacterDataModel> characterList = new ArrayList<>();
+    ArrayList<CharacterDataModel> deletedCharacters = new ArrayList<>();
 
 
     public AliveCharacterFragment() {
@@ -45,12 +56,14 @@ public class AliveCharacterFragment extends Fragment {
         getActivity().getApplicationContext().
                 registerReceiver(mHandleMessageReceiver, filter);
 
+        enableSwipe();
         return view;
     }
 
 
-    private void updateView(ArrayList<CharacterDataModel> characterList) {
+    private void updateView(ArrayList<CharacterDataModel> list) {
 
+        characterList = list;
         System.out.println("alive fragment = " + characterList.size());
         adapterCharacterList = new AdapterCharacterList(characterList);
         characterListView.setHasFixedSize(true);
@@ -58,85 +71,51 @@ public class AliveCharacterFragment extends Fragment {
         characterListView.setAdapter(adapterCharacterList);
     }
 
-//    private void enableSwipe(){
-//        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-//                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//                int position = viewHolder.getAdapterPosition();
-//
-//                if (direction == ItemTouchHelper.LEFT){
-////                    final ColorSpace.Model deletedModel = imageModelArrayList.get(position);
-////                    final int deletedPosition = position;
-//                    adapter.removeItem(position);
-//                    // showing snack bar with Undo option
-//                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), " removed from Recyclerview!", Snackbar.LENGTH_LONG);
-//                    snackbar.setAction("UNDO", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            // undo is selected, restore the deleted item
-//                            adapter.restoreItem(deletedModel, deletedPosition);
-//                        }
-//                    });
-//                    snackbar.setActionTextColor(Color.YELLOW);
-//                    snackbar.show();
-//                } else {
-//                    final Model deletedModel = imageModelArrayList.get(position);
-//                    final int deletedPosition = position;
-//                    adapter.removeItem(position);
-//                    // showing snack bar with Undo option
-//                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), " removed from Recyclerview!", Snackbar.LENGTH_LONG);
-//                    snackbar.setAction("UNDO", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//
-//                            // undo is selected, restore the deleted item
-//                            adapter.restoreItem(deletedModel, deletedPosition);
-//                        }
-//                    });
-//                    snackbar.setActionTextColor(Color.YELLOW);
-//                    snackbar.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-//
-//                Bitmap icon;
-//                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-//
-//                    View itemView = viewHolder.itemView;
-//                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-//                    float width = height / 3;
-//
-//                    if(dX > 0){
-//                        p.setColor(Color.parseColor("#388E3C"));
-//                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-//                        c.drawRect(background,p);
-//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.delete);
-//                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-//                        c.drawBitmap(icon,null,icon_dest,p);
-//                    } else {
-//                        p.setColor(Color.parseColor("#D32F2F"));
-//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-//                        c.drawRect(background,p);
-//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.delete);
-//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-//                        c.drawBitmap(icon,null,icon_dest,p);
-//                    }
-//                }
-//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-//            }
-//        };
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
-//    }
+    private void enableSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                deletedCharacters.add(characterList.get(position));
+                adapterCharacterList.removeItem(position);
+                deletedCharacters.get(deletedCharacters.size()-1).setCharStatus("Dead");
+
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX > 0){
+                        p.setColor(Color.parseColor("#388E3C"));
+                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.dead);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(characterListView);
+    }
+
 
     private final BroadcastReceiver mHandleMessageReceiver = new
             BroadcastReceiver() {
@@ -165,6 +144,40 @@ public class AliveCharacterFragment extends Fragment {
             Log.e("UnRegister Error", "> " + e.getMessage());
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Log.d("Alive Fragment", "Fragment is visible.");
+            deletedCharacters.clear();
+        }
+
+        else {
+            Log.d("Alive Fragment", "Fragment is not visible.");
+            if(deletedCharacters.size() != 0) {
+                sendDeletedCharacter.sendData(deletedCharacters);
+
+            }
+
+        }
+    }
+
+    interface SendDeletedCharacter {
+        void sendData(ArrayList<CharacterDataModel> list);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            sendDeletedCharacter = (SendDeletedCharacter) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Error in retrieving data. Please try again");
+        }
     }
 }
 

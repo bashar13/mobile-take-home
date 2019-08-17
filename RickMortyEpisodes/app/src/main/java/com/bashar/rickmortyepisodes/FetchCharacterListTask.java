@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class ParseCharacterListTask extends AsyncTask<String, Void, ArrayList<CharacterDataModel>> {
+class FetchCharacterListTask extends AsyncTask<String, Void, ArrayList<CharacterDataModel>> {
 
-    private String TAG = ParseCharacterListTask.class.getSimpleName();
+    private String TAG = FetchCharacterListTask.class.getSimpleName();
     ArrayList<CharacterDataModel> characterList = new ArrayList<>();
     public AsyncResponseForCharacterList delegate = null;
 
@@ -20,6 +20,11 @@ class ParseCharacterListTask extends AsyncTask<String, Void, ArrayList<Character
         super.onPreExecute();
         //Toast.makeText(get,"Json Data is downloading",Toast.LENGTH_LONG).show();
 
+    }
+
+    FetchCharacterListTask setListener(AsyncResponseForCharacterList listener) {
+        this.delegate = listener;
+        return this;
     }
 
     @Override

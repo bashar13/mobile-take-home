@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,8 @@ public class DeadCharacterFragment extends Fragment {
 
 
     RecyclerView characterListView;
+    ProgressBar progBarView;
+    TextView noDataText;
     ArrayList<CharacterDataModel> characterList = new ArrayList<>();
     public DeadCharacterFragment() {
         // Required empty public constructor
@@ -32,15 +36,16 @@ public class DeadCharacterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_alive_character, container, false);
+        View view = inflater.inflate(R.layout.fragment_character_list, container, false);
 
         characterListView = view.findViewById(R.id.aliveCharList);
+        progBarView = view.findViewById(R.id.loadingPanel);
+        noDataText = view.findViewById(R.id.noData);
 
         IntentFilter filter = new IntentFilter("BROADCAST_DATA_SEND");
         getActivity().getApplicationContext().
                 registerReceiver(mHandleMessageReceiver, filter);
 
-        System.out.println("Dead Fragment on Create");
         view.setId(R.id.aliveCharList);
         return view;
     }
@@ -48,10 +53,18 @@ public class DeadCharacterFragment extends Fragment {
     private void updateView(ArrayList<CharacterDataModel> characterList) {
 
         //System.out.println("dead fragment = " + characterList.size());
-        CharacterListAdapter characterListAdapter = new CharacterListAdapter(characterList);
-        characterListView.setHasFixedSize(true);
-        characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        characterListView.setAdapter(characterListAdapter);
+        if(!characterList.isEmpty()) {
+            CharacterListAdapter characterListAdapter = new CharacterListAdapter(characterList);
+            characterListView.setHasFixedSize(true);
+            characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
+            characterListView.setAdapter(characterListAdapter);
+            noDataText.setVisibility(View.GONE);
+        } else {
+            noDataText.setText(getText(R.string.dead_char));
+            noDataText.setVisibility(View.VISIBLE);
+        }
+        progBarView.setVisibility(View.GONE);
+
     }
 
     private final BroadcastReceiver mHandleMessageReceiver = new

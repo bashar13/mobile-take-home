@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class ParseEpisodeListTask extends AsyncTask<String, Void, ArrayList<EpisodeDataModel>> {
+class FetchEpisodeListTask extends AsyncTask<String, Void, ArrayList<EpisodeDataModel>> {
 
-    private String TAG = ParseEpisodeListTask.class.getSimpleName();
+    private String TAG = FetchEpisodeListTask.class.getSimpleName();
     ArrayList<EpisodeDataModel> episodeList = new ArrayList<>();
     public AsyncResponseForEpisodeList delegate = null;
 
@@ -20,6 +20,11 @@ class ParseEpisodeListTask extends AsyncTask<String, Void, ArrayList<EpisodeData
         super.onPreExecute();
         //Toast.makeText(get,"Json Data is downloading",Toast.LENGTH_LONG).show();
 
+    }
+
+    public FetchEpisodeListTask setListener(AsyncResponseForEpisodeList listener) {
+        this.delegate = listener;
+        return this;
     }
 
     @Override
@@ -45,13 +50,15 @@ class ParseEpisodeListTask extends AsyncTask<String, Void, ArrayList<EpisodeData
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                 }
+            } else {
+                break;
             }
 
         } while(!url.isEmpty());
 
-        for (EpisodeDataModel data: episodeList) {
-            System.out.println(data.getCharacterIds());
-        }
+//        for (EpisodeDataModel data: episodeList) {
+//            System.out.println(data.getCharacterIds());
+//        }
 
         return episodeList;
     }

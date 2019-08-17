@@ -4,4 +4,15 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="ic_clear_margin">56dp</dimen>
     <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="normal_font_size">18sp</dimen>
+    <dimen name="large_font_size">20sp</dimen>
+    <dimen name="extra_large_font_size">22sp</dimen>
+    <dimen name="small_font_size">14sp</dimen>
+    <dimen name="list_row_top_padding">5sp</dimen>
+    <dimen name="list_row_bottom_padding">5sp</dimen>
+    <dimen name="list_row_gap_between_title_subtitle">8sp</dimen>
+    <dimen name="avatar_height">150dp</dimen>
+    <dimen name="avatar_width">150dp</dimen>
+    <dimen name="top_margin_big">35dp</dimen>
+    <dimen name="top_margin_small">15dp</dimen>
 </resources>

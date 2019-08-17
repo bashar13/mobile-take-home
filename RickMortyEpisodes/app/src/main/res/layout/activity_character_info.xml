@@ -10,11 +10,11 @@
 
     <ImageView
         android:id="@+id/charAvatar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/avatar_width"
+        android:layout_height="@dimen/avatar_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="@dimen/top_margin_big"
         tools:ignore="ContentDescription"
         tools:srcCompat="@drawable/noavatar" />
     <TextView
@@ -22,27 +22,25 @@
         android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/charAvatar"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/top_margin_small"
         android:text="Status"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        android:textSize="@dimen/extra_large_font_size"/>
     <TextView
         android:id="@+id/charId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="id"
         android:layout_below="@+id/charStatus"/>
     <TextView
         android:id="@+id/charGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_below="@+id/charStatus"
-        android:text="Gender"
         android:layout_alignParentEnd="true"/>
 
     <TextView
@@ -50,10 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="name"
         android:layout_below="@+id/charId"/>
     <TextView
         android:id="@+id/charOrigin"
@@ -61,9 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_below="@+id/charGender"
-        android:text="origin"
         android:layout_alignParentEnd="true"/>
 
     <TextView
@@ -71,10 +67,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="Species"
         android:layout_below="@+id/charName"/>
     <TextView
         android:id="@+id/charLocation"
@@ -82,9 +77,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_below="@+id/charOrigin"
-        android:text="Location"
         android:layout_alignParentEnd="true"/>
 
     <TextView
@@ -94,8 +88,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
+        android:textSize="@dimen/normal_font_size"
         android:layout_below="@+id/charSpecies"
-        android:text="Date"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>

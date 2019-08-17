@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 public class CharacterListActivity extends AppCompatActivity implements AsyncResponseForCharacterList, AliveCharacterFragment.SendDeletedCharacter {
 
     private String TAG = CharacterListActivity.class.getSimpleName();
-    private ParseCharacterListTask asyncTask = new ParseCharacterListTask();
+    private FetchCharacterListTask asyncTask = new FetchCharacterListTask();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,11 @@ public class CharacterListActivity extends AppCompatActivity implements AsyncRes
 
         Intent intent = getIntent();
         String characterIds = intent.getStringExtra("CHARACTER_IDS");
-        System.out.println(TAG + characterIds);
+        String episodeName = intent.getStringExtra("EPISODE_NAME");
+        //System.out.println(TAG + characterIds);
+
+        TextView titleView = findViewById(R.id.title);
+        titleView.setText(episodeName);
 
         asyncTask.delegate = this;
 
@@ -42,25 +48,27 @@ public class CharacterListActivity extends AppCompatActivity implements AsyncRes
 
     @Override
     public void updateUIOnProcessFinish(ArrayList<CharacterDataModel> result) {
-
         System.out.println(TAG + result.size());
+
         ArrayList<CharacterDataModel> aliveCharacters = new ArrayList<>();
         ArrayList<CharacterDataModel> deadCharacters = new ArrayList<>();
-        for (CharacterDataModel item: result) {
-            if(item.getCharStatus().equalsIgnoreCase("Alive")){
-                aliveCharacters.add(item);
-            } else if(item.getCharStatus().equalsIgnoreCase("Dead")) {
-                deadCharacters.add(item);
+        if(!result.isEmpty()) {
+            for (CharacterDataModel item : result) {
+                if (item.getCharStatus().equalsIgnoreCase("Alive")) {
+                    aliveCharacters.add(item);
+                } else if (item.getCharStatus().equalsIgnoreCase("Dead")) {
+                    deadCharacters.add(item);
+                }
             }
         }
 
-
         Intent intent = new Intent("BROADCAST_DATA_SEND");
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ALIVE_CHAR", (Serializable)aliveCharacters);
-        bundle.putSerializable("DEAD_CHAR", (Serializable)deadCharacters);
+        bundle.putSerializable("ALIVE_CHAR", (Serializable) aliveCharacters);
+        bundle.putSerializable("DEAD_CHAR", (Serializable) deadCharacters);
         intent.putExtra("CHAR_DATA", bundle);
         sendBroadcast(intent);
+
     }
 
     @Override

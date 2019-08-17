@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +29,8 @@ import java.util.Collections;
 public class AliveCharacterFragment extends Fragment {
 
     RecyclerView characterListView;
+    ProgressBar progBarView;
+    TextView noDataText;
     CharacterListAdapter characterListAdapter;
     private Paint p = new Paint();
     SendDeletedCharacter sendDeletedCharacter;
@@ -42,9 +46,11 @@ public class AliveCharacterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_alive_character, container, false);
+        View view = inflater.inflate(R.layout.fragment_character_list, container, false);
 
         characterListView = view.findViewById(R.id.aliveCharList);
+        progBarView = view.findViewById(R.id.loadingPanel);
+        noDataText = view.findViewById(R.id.noData);
 
         IntentFilter filter = new IntentFilter("BROADCAST_DATA_SEND");
         getActivity().getApplicationContext().
@@ -57,12 +63,22 @@ public class AliveCharacterFragment extends Fragment {
 
     private void updateView(ArrayList<CharacterDataModel> list) {
 
-        characterList = list;
-        //System.out.println("alive fragment = " + characterList.size());
-        characterListAdapter = new CharacterListAdapter(characterList);
-        characterListView.setHasFixedSize(true);
-        characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        characterListView.setAdapter(characterListAdapter);
+        if(!list.isEmpty()) {
+            characterList = list;
+            //System.out.println("alive fragment = " + characterList.size());
+            characterListAdapter = new CharacterListAdapter(characterList);
+            characterListView.setHasFixedSize(true);
+            characterListView.setLayoutManager(new LinearLayoutManager(getContext()));
+            characterListView.setAdapter(characterListAdapter);
+            noDataText.setVisibility(View.GONE);
+        }
+        else {
+            noDataText.setText(getText(R.string.alive_char));
+            noDataText.setVisibility(View.VISIBLE);
+        }
+
+        progBarView.setVisibility(View.GONE);
+
     }
 
     private void enableSwipe(){
@@ -85,7 +101,8 @@ public class AliveCharacterFragment extends Fragment {
             }
 
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
                 Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
@@ -99,7 +116,8 @@ public class AliveCharacterFragment extends Fragment {
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.dead);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,
+                                (float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     }
                 }
@@ -116,7 +134,8 @@ public class AliveCharacterFragment extends Fragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     Bundle bundle = intent.getBundleExtra("CHAR_DATA");
-                    ArrayList<CharacterDataModel> characterList = (ArrayList<CharacterDataModel>)bundle.getSerializable("ALIVE_CHAR");
+                    ArrayList<CharacterDataModel> characterList =
+                            (ArrayList<CharacterDataModel>)bundle.getSerializable("ALIVE_CHAR");
 
                     Collections.sort(characterList);
 

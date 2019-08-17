@@ -43,6 +43,7 @@ class EpisodeListAdapter extends RecyclerView.Adapter<EpisodeListAdapter.ViewHol
                 //System.out.println(data.getEpisodeName());
                 Intent intent = new Intent(view.getContext(), CharacterListActivity.class);
                 intent.putExtra("CHARACTER_IDS", data.getCharacterIds());
+                intent.putExtra("EPISODE_NAME", data.getEpisodeName());
                 view.getContext().startActivity(intent);
             }
         });

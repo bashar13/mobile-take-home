@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
@@ -11,6 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/list_row_top_padding"
+        android:layout_marginBottom="@dimen/list_row_bottom_padding"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
@@ -19,16 +20,16 @@
             android:id="@+id/episodeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Episode Name"
-            android:textSize="20sp" />
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/large_font_size" />
 
         <TextView
             android:id="@+id/episodeAirDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            tools:text="airDate" />
+            android:layout_marginTop="@dimen/list_row_gap_between_title_subtitle"
+            android:textSize="@dimen/small_font_size"
+             />
 
     </LinearLayout>
 
@@ -39,8 +40,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
-        tools:text="EpisodeNo" />
+        android:gravity="bottom"
+        android:textSize="@dimen/normal_font_size"
+        android:layout_marginBottom="@dimen/list_row_bottom_padding"
+         />
 
 </RelativeLayout>
